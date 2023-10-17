@@ -2,13 +2,11 @@
 package e_commerce_system;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+
 
 public class ShoppingCart {
-    private List<Product> items;
+   private List<Product> items;
 
     public ShoppingCart() {
         items = new ArrayList<>();
@@ -16,6 +14,10 @@ public class ShoppingCart {
 
     public void addProduct(Product product) {
         items.add(product);
+    }
+
+    public List<Product> getItems() {
+        return items;
     }
 
     public double calculateTotal() {

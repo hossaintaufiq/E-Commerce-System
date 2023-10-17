@@ -4,8 +4,6 @@ package e_commerce_system;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class UserManager {
     private List<User> users;
 
@@ -31,4 +29,3 @@ public class UserManager {
         return null;
     }
 }
-
