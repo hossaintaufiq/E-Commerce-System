@@ -12,9 +12,8 @@ public class ECommerce {
     private static String loggedInUser = null;
 
     public static void main(String[] args) {
-        
-//         color code 
-     System.out.print("\u001B[46m");// ANSI escape codes 
+
+        System.out.print("\u001B[46m");// ANSI escape codes 
         List<Product> products = initializeProducts();
 
         // Displaying information of all products
@@ -29,7 +28,9 @@ public class ECommerce {
                 System.out.println("Choose an option:");
                 System.out.println("1. Login");
                 System.out.println("2. Register");
-                System.out.println("3. Exit");
+//                adding new code 
+                System.out.println("3. Search by Brand");
+                System.out.println("4. Exit");
 
                 Scanner scanner = new Scanner(System.in);
                 System.out.print("\u001B[34mEnter your choice (1-3): ");
@@ -44,11 +45,20 @@ public class ECommerce {
                         authenticationManager.register();
                         break;
                     case 3:
+                        // Search by brand
+                        System.out.print("\u001B[34mEnter a brand to search for products: ");
+//                        scanner.nextLine();  // Consume the newline character
+                        String searchBrand = scanner.nextLine();
+                        searchByBrand(products, searchBrand);
+                        break;
+
+                    case 4:
                         System.out.println("\u001B[31mExiting the program. Thank you!");
                         return;
                     default:
                         System.out.println("\u001B[31mInvalid choice. Please choose a valid option.");
                         break;
+
                 }
             } else {
                 // User is logged in
@@ -93,8 +103,7 @@ public class ECommerce {
     }
 
     private static void displayMenu() {
-        
-        
+
         System.out.println("\nMenu Options:");
         System.out.println("1. Search by Brand");
         System.out.println("2. View Cart");
@@ -135,33 +144,30 @@ public class ECommerce {
         System.out.println("------------------------");
     }
 
-    
 //    new code starts 
     private static void displayAllProducts(List<Product> products) {
-    System.out.println("\u001B[34m+---------------\u001B[36mList of Products\u001B[34m-------------+");
+        System.out.println("\u001B[34m+---------------\u001B[36mList of Products\u001B[34m-------------+");
 
-    System.out.println("\u001B[34m+--------------------------------------------+");
-    System.out.println("| \u001B[36mName               \u001B[34m| \u001B[36mBrand      \u001B[34m| \u001B[36mPrice    \u001B[34m|");
-    System.out.println("+--------------------------------------------+");
+        System.out.println("\u001B[34m+--------------------------------------------+");
+        System.out.println("| \u001B[36mName               \u001B[34m| \u001B[36mBrand      \u001B[34m| \u001B[36mPrice    \u001B[34m|");
+        System.out.println("+--------------------------------------------+");
 
-    for (Product product : products) {
-        String productName = "\u001B[35m" + padString(product.getName(), 18) + "\u001B[34m";
-        String brand = padString(product.getBrand(), 10);
-        String price = padString("$" + String.valueOf(product.getPrice()), 8);
+        for (Product product : products) {
+            String productName = "\u001B[35m" + padString(product.getName(), 18) + "\u001B[34m";
+            String brand = padString(product.getBrand(), 10);
+            String price = padString("$" + String.valueOf(product.getPrice()), 8);
 
-        System.out.println("| " + productName + " | " + brand + " | " + price + " |");
+            System.out.println("| " + productName + " | " + brand + " | " + price + " |");
+        }
+
+        System.out.println("+--------------------------------------------+\u001B[0m");
     }
 
-    System.out.println("+--------------------------------------------+\u001B[0m");
-}
+    private static String padString(String str, int length) {
+        return String.format("%-" + length + "s", str);
+    }
 
-private static String padString(String str, int length) {
-    return String.format("%-" + length + "s", str);
-}
-    
 //     new code ends 
-    
-
     private static void clearConsole() {
         // Clear the console by printing empty lines
         for (int i = 0; i < 50; i++) {
@@ -203,70 +209,67 @@ private static String padString(String str, int length) {
         return products;
     }
 
-    
     private static void viewCart() {
-    try {
-        // Read the cart from the file
-        FileReader fileReader = new FileReader(CART_FILE);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        try {
+            // Read the cart from the file
+            FileReader fileReader = new FileReader(CART_FILE);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-        List<String> cartItems = new ArrayList<>();
+            List<String> cartItems = new ArrayList<>();
 
-        System.out.println("Cart:");
+            System.out.println("Cart:");
 
-        String line;
-        int itemIndex = 1;
-        while ((line = bufferedReader.readLine()) != null) {
-            System.out.println(itemIndex + ". " + line);
-            cartItems.add(line);
-            itemIndex++;
-        }
+            String line;
+            int itemIndex = 1;
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println(itemIndex + ". " + line);
+                cartItems.add(line);
+                itemIndex++;
+            }
 
-        bufferedReader.close();
+            bufferedReader.close();
 
-        if (!cartItems.isEmpty()) {
-            // Ask the user if they want to delete an item
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("\u001B[34mEnter the number of the item to delete (0 to go back): ");
-            int deleteChoice = scanner.nextInt();
+            if (!cartItems.isEmpty()) {
+                // Ask the user if they want to delete an item
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("\u001B[34mEnter the number of the item to delete (0 to go back): ");
+                int deleteChoice = scanner.nextInt();
 
-            if (deleteChoice > 0 && deleteChoice <= cartItems.size()) {
-                // Remove the selected item from the cart
-                cartItems.remove(deleteChoice - 1);
+                if (deleteChoice > 0 && deleteChoice <= cartItems.size()) {
+                    // Remove the selected item from the cart
+                    cartItems.remove(deleteChoice - 1);
 
-                // Write the updated cart back to the file
-                try {
-                    FileWriter fileWriter = new FileWriter(CART_FILE);
-                    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                    // Write the updated cart back to the file
+                    try {
+                        FileWriter fileWriter = new FileWriter(CART_FILE);
+                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-                    for (String cartItem : cartItems) {
-                        bufferedWriter.write(cartItem);
-                        bufferedWriter.newLine();
+                        for (String cartItem : cartItems) {
+                            bufferedWriter.write(cartItem);
+                            bufferedWriter.newLine();
+                        }
+
+                        bufferedWriter.close();
+                    } catch (IOException e) {
+                        System.out.println("\u001B[31mError writing to the cart file: " + e.getMessage());
                     }
 
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    System.out.println("\u001B[31mError writing to the cart file: " + e.getMessage());
+                    System.out.println("\u001B[31mItem removed from the cart.");
+                } else if (deleteChoice != 0) {
+                    System.out.println("\u001B[31mInvalid choice. No changes made to the cart.");
                 }
-
-                System.out.println("\u001B[31mItem removed from the cart.");
-            } else if (deleteChoice != 0) {
-                System.out.println("\u001B[31mInvalid choice. No changes made to the cart.");
             }
+
+        } catch (IOException e) {
+            System.out.println("\u001B[31mError reading the cart file: " + e.getMessage());
         }
 
-    } catch (IOException e) {
-        System.out.println("\u001B[31mError reading the cart file: " + e.getMessage());
+        // Wait for Enter to go back to the home page
+        System.out.println("\n\u001B[34mPress Enter to go back to the home page...");
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
+        clearConsole();
     }
-
-    // Wait for Enter to go back to the home page
-    System.out.println("\n\u001B[34mPress Enter to go back to the home page...");
-    Scanner scanner = new Scanner(System.in);
-    scanner.nextLine();
-    clearConsole();
-}
-
-
 
     private static void addToCart(List<Product> products) {
         // Clear the console
@@ -312,13 +315,19 @@ private static String padString(String str, int length) {
             System.out.println("\u001B[31mInvalid product name. Please enter a valid product name.");
         }
 
-        // Wait for Enter to go back to the home page
-        System.out.println("\n\u001B[34mPress Enter to go back to the home page...");
-        scanner.nextLine();  // Consume the newline character
-        scanner.nextLine();
-        clearConsole();
-        
+    // Wait for Enter to go back to the home page
+    System.out.println (
+
+    "\n\u001B[34mPress Enter to go back to the home page...");
+    scanner.nextLine ();  // Consume the newline character
+
+    scanner.nextLine ();
+
+    clearConsole();
+
 //        reset color 
-      System.out.print("\u001B[0m");
+    System.out.print (
+
+"\u001B[0m");
     }
 }
