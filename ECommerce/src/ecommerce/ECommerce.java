@@ -131,11 +131,26 @@ public class ECommerce {
     }
 
     private static void displayAllProducts(List<Product> products) {
-        System.out.println("List of Products:");
-        for (Product product : products) {
-            displayProduct(product);
-        }
+    System.out.println("List of Products:");
+    System.out.println("+--------------------------------------------+");
+    System.out.println("| Name               | Brand      | Price  |");
+    System.out.println("+--------------------------------------------+");
+
+    for (Product product : products) {
+        String productName = padString(product.getName(), 18);
+        String brand = padString(product.getBrand(), 10);
+        String price = padString("$" + String.valueOf(product.getPrice()), 8);
+
+        System.out.println("| " + productName + " | " + brand + " | " + price + " |");
     }
+
+    System.out.println("+---------------------------------------------+");
+}
+
+private static String padString(String str, int length) {
+    return String.format("%-" + length + "s", str);
+}
+    
 
     private static void clearConsole() {
         // Clear the console by printing empty lines
@@ -152,28 +167,28 @@ public class ECommerce {
         products.add(new Product("iPad Pro", "Apple", 799.99));
         products.add(new Product("MacBook Air", "Apple", 1299.99));
         products.add(new Product("AirPods Pro", "Apple", 249.99));
-        products.add(new Product("Apple Watch Series 7", "Apple", 499.99));
+        products.add(new Product("Apple Watch 7", "Apple", 499.99));
 
         // Adding 5 Samsung products
         products.add(new Product("Galaxy S21", "Samsung", 899.99));
         products.add(new Product("Galaxy Tab S7", "Samsung", 649.99));
-        products.add(new Product("Samsung Notebook 9", "Samsung", 1299.99));
+        products.add(new Product("Samsung Notebook", "Samsung", 1299.99));
         products.add(new Product("Galaxy Buds Pro", "Samsung", 199.99));
-        products.add(new Product("Samsung Galaxy Watch 4", "Samsung", 349.99));
+        products.add(new Product("Galaxy Watch 4", "Samsung", 349.99));
 
         // Adding 5 Sony products
         products.add(new Product("Sony Xperia 1 III", "Sony", 1299.99));
         products.add(new Product("Sony WH-1000XM4", "Sony", 349.99));
-        products.add(new Product("Sony Bravia XR A80J", "Sony", 1599.99));
+        products.add(new Product("Sony Bravia XR ", "Sony", 1599.99));
         products.add(new Product("Sony WF-1000XM4", "Sony", 279.99));
         products.add(new Product("Sony Alpha 7 III", "Sony", 1999.99));
 
         // Adding 5 HP products
         products.add(new Product("HP Spectre x360", "HP", 1299.99));
         products.add(new Product("HP Envy 13", "HP", 999.99));
-        products.add(new Product("HP Pavilion Gaming Laptop", "HP", 799.99));
-        products.add(new Product("HP OfficeJet Pro 9015", "HP", 229.99));
-        products.add(new Product("HP Sprocket Portable Photo Printer", "HP", 99.99));
+        products.add(new Product("HP Pavilion Laptop", "HP", 799.99));
+        products.add(new Product("HP OfficeJet Pro ", "HP", 229.99));
+        products.add(new Product("HP Printer", "HP", 99.99));
 
         return products;
     }
