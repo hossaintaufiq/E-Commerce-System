@@ -178,30 +178,70 @@ public class ECommerce {
         return products;
     }
 
+    
     private static void viewCart() {
-        try {
-            // Read the cart from the file
-            FileReader fileReader = new FileReader(CART_FILE);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+    try {
+        // Read the cart from the file
+        FileReader fileReader = new FileReader(CART_FILE);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            System.out.println("Cart:");
+        List<String> cartItems = new ArrayList<>();
 
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
-            }
+        System.out.println("Cart:");
 
-            bufferedReader.close();
-        } catch (IOException e) {
-            System.out.println("Error reading the cart file: " + e.getMessage());
+        String line;
+        int itemIndex = 1;
+        while ((line = bufferedReader.readLine()) != null) {
+            System.out.println(itemIndex + ". " + line);
+            cartItems.add(line);
+            itemIndex++;
         }
 
-        // Wait for Enter to go back to the home page
-        System.out.println("\nPress Enter to go back to the home page...");
-        Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
-        clearConsole();
+        bufferedReader.close();
+
+        if (!cartItems.isEmpty()) {
+            // Ask the user if they want to delete an item
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter the number of the item to delete (0 to go back): ");
+            int deleteChoice = scanner.nextInt();
+
+            if (deleteChoice > 0 && deleteChoice <= cartItems.size()) {
+                // Remove the selected item from the cart
+                cartItems.remove(deleteChoice - 1);
+
+                // Write the updated cart back to the file
+                try {
+                    FileWriter fileWriter = new FileWriter(CART_FILE);
+                    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+                    for (String cartItem : cartItems) {
+                        bufferedWriter.write(cartItem);
+                        bufferedWriter.newLine();
+                    }
+
+                    bufferedWriter.close();
+                } catch (IOException e) {
+                    System.out.println("Error writing to the cart file: " + e.getMessage());
+                }
+
+                System.out.println("Item removed from the cart.");
+            } else if (deleteChoice != 0) {
+                System.out.println("Invalid choice. No changes made to the cart.");
+            }
+        }
+
+    } catch (IOException e) {
+        System.out.println("Error reading the cart file: " + e.getMessage());
     }
+
+    // Wait for Enter to go back to the home page
+    System.out.println("\nPress Enter to go back to the home page...");
+    Scanner scanner = new Scanner(System.in);
+    scanner.nextLine();
+    clearConsole();
+}
+
+
 
     private static void addToCart(List<Product> products) {
         // Clear the console
