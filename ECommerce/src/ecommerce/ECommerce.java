@@ -12,6 +12,9 @@ public class ECommerce {
     private static String loggedInUser = null;
 
     public static void main(String[] args) {
+        
+//         color code 
+     System.out.print("\u001B[46m");// ANSI escape codes 
         List<Product> products = initializeProducts();
 
         // Displaying information of all products
@@ -22,14 +25,14 @@ public class ECommerce {
 
         while (true) {
             if (loggedInUser == null) {
-                System.out.println("\nWelcome to the E-Commerce System!");
+                System.out.println("\n\u001B[36mWelcome to the E-Commerce System!");
                 System.out.println("Choose an option:");
                 System.out.println("1. Login");
                 System.out.println("2. Register");
                 System.out.println("3. Exit");
 
                 Scanner scanner = new Scanner(System.in);
-                System.out.print("Enter your choice (1-3): ");
+                System.out.print("\u001B[34mEnter your choice (1-3): ");
                 int choice = scanner.nextInt();
                 scanner.nextLine();  // Consume the newline character
 
@@ -41,10 +44,10 @@ public class ECommerce {
                         authenticationManager.register();
                         break;
                     case 3:
-                        System.out.println("Exiting the program. Thank you!");
+                        System.out.println("\u001B[31mExiting the program. Thank you!");
                         return;
                     default:
-                        System.out.println("Invalid choice. Please choose a valid option.");
+                        System.out.println("\u001B[31mInvalid choice. Please choose a valid option.");
                         break;
                 }
             } else {
@@ -53,13 +56,13 @@ public class ECommerce {
 
                 // User input for menu option
                 Scanner scanner = new Scanner(System.in);
-                System.out.print("Enter your choice (1-5): ");
+                System.out.print("\u001B[34mEnter your choice (1-5): ");
                 int choice = scanner.nextInt();
 
                 switch (choice) {
                     case 1:
                         // Search by brand
-                        System.out.print("Enter a brand to search for products: ");
+                        System.out.print("\u001B[34mEnter a brand to search for products: ");
                         scanner.nextLine();  // Consume the newline character
                         String searchBrand = scanner.nextLine();
                         searchByBrand(products, searchBrand);
@@ -75,14 +78,14 @@ public class ECommerce {
                     case 4:
                         // Logout
                         loggedInUser = null;
-                        System.out.println("Logged out successfully.");
+                        System.out.println("\u001B[32mLogged out successfully.");
                         break;
                     case 5:
                         // Exit
-                        System.out.println("Exiting the program. Thank you!");
+                        System.out.println("\u001B[31mExiting the program. Thank you!");
                         return;
                     default:
-                        System.out.println("Invalid choice. Please choose a valid option.");
+                        System.out.println("\u001B[31mInvalid choice. Please choose a valid option.");
                         break;
                 }
             }
@@ -90,6 +93,8 @@ public class ECommerce {
     }
 
     private static void displayMenu() {
+        
+        
         System.out.println("\nMenu Options:");
         System.out.println("1. Search by Brand");
         System.out.println("2. View Cart");
@@ -113,11 +118,11 @@ public class ECommerce {
         }
 
         if (!found) {
-            System.out.println("No products found with brand '" + searchBrand + "'.");
+            System.out.println("\u001B[31mNo products found with brand '" + searchBrand + "'.");
         }
 
         // Wait for Enter to go back to the home page
-        System.out.println("\nPress Enter to go back to the home page...");
+        System.out.println("\n\u001B[34mPress Enter to go back to the home page...");
         Scanner scanner = new Scanner(System.in);
         scanner.nextLine();
         clearConsole();
@@ -130,26 +135,31 @@ public class ECommerce {
         System.out.println("------------------------");
     }
 
+    
+//    new code starts 
     private static void displayAllProducts(List<Product> products) {
-    System.out.println("List of Products:");
-    System.out.println("+--------------------------------------------+");
-    System.out.println("| Name               | Brand      | Price  |");
+    System.out.println("\u001B[34m+---------------\u001B[36mList of Products\u001B[34m-------------+");
+
+    System.out.println("\u001B[34m+--------------------------------------------+");
+    System.out.println("| \u001B[36mName               \u001B[34m| \u001B[36mBrand      \u001B[34m| \u001B[36mPrice    \u001B[34m|");
     System.out.println("+--------------------------------------------+");
 
     for (Product product : products) {
-        String productName = padString(product.getName(), 18);
+        String productName = "\u001B[35m" + padString(product.getName(), 18) + "\u001B[34m";
         String brand = padString(product.getBrand(), 10);
         String price = padString("$" + String.valueOf(product.getPrice()), 8);
 
         System.out.println("| " + productName + " | " + brand + " | " + price + " |");
     }
 
-    System.out.println("+---------------------------------------------+");
+    System.out.println("+--------------------------------------------+\u001B[0m");
 }
 
 private static String padString(String str, int length) {
     return String.format("%-" + length + "s", str);
 }
+    
+//     new code ends 
     
 
     private static void clearConsole() {
@@ -217,7 +227,7 @@ private static String padString(String str, int length) {
         if (!cartItems.isEmpty()) {
             // Ask the user if they want to delete an item
             Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter the number of the item to delete (0 to go back): ");
+            System.out.print("\u001B[34mEnter the number of the item to delete (0 to go back): ");
             int deleteChoice = scanner.nextInt();
 
             if (deleteChoice > 0 && deleteChoice <= cartItems.size()) {
@@ -236,21 +246,21 @@ private static String padString(String str, int length) {
 
                     bufferedWriter.close();
                 } catch (IOException e) {
-                    System.out.println("Error writing to the cart file: " + e.getMessage());
+                    System.out.println("\u001B[31mError writing to the cart file: " + e.getMessage());
                 }
 
-                System.out.println("Item removed from the cart.");
+                System.out.println("\u001B[31mItem removed from the cart.");
             } else if (deleteChoice != 0) {
-                System.out.println("Invalid choice. No changes made to the cart.");
+                System.out.println("\u001B[31mInvalid choice. No changes made to the cart.");
             }
         }
 
     } catch (IOException e) {
-        System.out.println("Error reading the cart file: " + e.getMessage());
+        System.out.println("\u001B[31mError reading the cart file: " + e.getMessage());
     }
 
     // Wait for Enter to go back to the home page
-    System.out.println("\nPress Enter to go back to the home page...");
+    System.out.println("\n\u001B[34mPress Enter to go back to the home page...");
     Scanner scanner = new Scanner(System.in);
     scanner.nextLine();
     clearConsole();
@@ -267,7 +277,7 @@ private static String padString(String str, int length) {
 
         // User input for adding to cart
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the name of the product to add to the cart: ");
+        System.out.print("\u001B[34mEnter the name of the product to add to the cart: ");
         String productName = scanner.nextLine();
 
         // Check if the entered product name is valid
@@ -280,7 +290,7 @@ private static String padString(String str, int length) {
         }
 
         if (validProduct) {
-            System.out.print("Enter the quantity to add to the cart: ");
+            System.out.print("\u001B[34mEnter the quantity to add to the cart: ");
             int quantity = scanner.nextInt();
 
             // Append the product and quantity to the cart file
@@ -293,19 +303,22 @@ private static String padString(String str, int length) {
 
                 bufferedWriter.close();
             } catch (IOException e) {
-                System.out.println("Error writing to the cart file: " + e.getMessage());
+                System.out.println("\u001B[31mError writing to the cart file: " + e.getMessage());
             }
 
             System.out.println(quantity + " " + productName + "(s) added to the cart.");
 
         } else {
-            System.out.println("Invalid product name. Please enter a valid product name.");
+            System.out.println("\u001B[31mInvalid product name. Please enter a valid product name.");
         }
 
         // Wait for Enter to go back to the home page
-        System.out.println("\nPress Enter to go back to the home page...");
+        System.out.println("\n\u001B[34mPress Enter to go back to the home page...");
         scanner.nextLine();  // Consume the newline character
         scanner.nextLine();
         clearConsole();
+        
+//        reset color 
+      System.out.print("\u001B[0m");
     }
 }
