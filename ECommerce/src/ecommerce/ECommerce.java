@@ -13,7 +13,7 @@ public class ECommerce {
 
     public static void main(String[] args) {
 
-        System.out.print("\u001B[46m");// ANSI escape codes 
+        System.out.print("\u001B[46m");// ANSI escape codes color code
         List<Product> products = initializeProducts();
 
         // Displaying information of all products
@@ -24,8 +24,10 @@ public class ECommerce {
 
         while (true) {
             if (loggedInUser == null) {
-                System.out.println("\n\u001B[36mWelcome to the E-Commerce System!");
-                System.out.println("Choose an option:");
+                System.out.println("\n\u001B[36m----------------------------------");
+                System.out.println("       \u001B[36mWelcome to E-Commerce");
+                System.out.println("\u001B[36m------------------------------------");
+                System.out.println("Menu Options:");
                 System.out.println("1. Login");
                 System.out.println("2. Register");
 //                adding new code 
@@ -79,7 +81,7 @@ public class ECommerce {
                         break;
                     case 2:
                         // View cart
-                        viewCart();
+                        viewCart(products);
                         break;
                     case 3:
                         // Add to cart
@@ -103,8 +105,10 @@ public class ECommerce {
     }
 
     private static void displayMenu() {
-
-        System.out.println("\nMenu Options:");
+        System.out.println("\n\u001B[36m----------------------------------");
+        System.out.println("\n       \u001B[36mMenu Options:");
+        System.out.println("\u001B[36m------------------------------------");
+//        System.out.println("\nMenu Options:");
         System.out.println("1. Search by Brand");
         System.out.println("2. View Cart");
         System.out.println("3. Add to Cart");
@@ -167,7 +171,7 @@ public class ECommerce {
         return String.format("%-" + length + "s", str);
     }
 
-//     new code ends 
+
     private static void clearConsole() {
         // Clear the console by printing empty lines
         for (int i = 0; i < 50; i++) {
@@ -208,60 +212,72 @@ public class ECommerce {
 
         return products;
     }
-
-    private static void viewCart() {
+        private static void viewCart(List<Product> products) {
         try {
-            // Read the cart from the file
             FileReader fileReader = new FileReader(CART_FILE);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             List<String> cartItems = new ArrayList<>();
 
-            System.out.println("Cart:");
+            System.out.println("\u001B[34mCart:");
 
             String line;
             int itemIndex = 1;
+            double totalPrice = 0.0;
             while ((line = bufferedReader.readLine()) != null) {
                 System.out.println(itemIndex + ". " + line);
                 cartItems.add(line);
+
+                // Extract the product name from the cart item
+                String productName = line.split("\t")[0];
+
+                // Find the product in the list and calculate its price
+                for (Product product : products) {
+                    if (product.getName().equalsIgnoreCase(productName)) {
+                        totalPrice += product.getPrice();
+                        break;
+                    }
+                }
+
                 itemIndex++;
             }
 
             bufferedReader.close();
 
+            // Display the total price
+            String formattedTotalPrice = String.format("%.2f", totalPrice);
+            System.out.println("\u001B[31mTotal Price of Items in Cart: $" + formattedTotalPrice);
+
             if (!cartItems.isEmpty()) {
                 // Ask the user if they want to delete an item
                 Scanner scanner = new Scanner(System.in);
-                System.out.print("\u001B[34mEnter the number of the item to delete (0 to go back): ");
+                System.out.print("Enter the number of the item to delete (0 to go back): ");
                 int deleteChoice = scanner.nextInt();
 
                 if (deleteChoice > 0 && deleteChoice <= cartItems.size()) {
-                    // Remove the selected item from the cart
+                    String itemToRemove = cartItems.get(deleteChoice - 1);
+
+                    // Remove the selected item from the cartItems list
                     cartItems.remove(deleteChoice - 1);
 
-                    // Write the updated cart back to the file
-                    try {
-                        FileWriter fileWriter = new FileWriter(CART_FILE);
-                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                    // Rewrite the cart file without the removed item
+                    FileWriter fileWriter = new FileWriter(CART_FILE);
+                    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-                        for (String cartItem : cartItems) {
-                            bufferedWriter.write(cartItem);
-                            bufferedWriter.newLine();
-                        }
-
-                        bufferedWriter.close();
-                    } catch (IOException e) {
-                        System.out.println("\u001B[31mError writing to the cart file: " + e.getMessage());
+                    for (String item : cartItems) {
+                        bufferedWriter.write(item + "\n");
                     }
 
-                    System.out.println("\u001B[31mItem removed from the cart.");
+                    bufferedWriter.close();
+
+                    // Display a success message after removing the item from the cart
+                    System.out.println("Item removed from the cart successfully.");
                 } else if (deleteChoice != 0) {
-                    System.out.println("\u001B[31mInvalid choice. No changes made to the cart.");
+                    System.out.println("Invalid choice. No changes made to the cart.");
                 }
             }
-
         } catch (IOException e) {
-            System.out.println("\u001B[31mError reading the cart file: " + e.getMessage());
+            System.out.println("Error reading the cart file: " + e.getMessage());
         }
 
         // Wait for Enter to go back to the home page
@@ -315,19 +331,16 @@ public class ECommerce {
             System.out.println("\u001B[31mInvalid product name. Please enter a valid product name.");
         }
 
-    // Wait for Enter to go back to the home page
-    System.out.println (
+        // Wait for Enter to go back to the home page
+        System.out.println(
+                "\n\u001B[34mPress Enter to go back to the home page...");
+        scanner.nextLine();  // Consume the newline character
 
-    "\n\u001B[34mPress Enter to go back to the home page...");
-    scanner.nextLine ();  // Consume the newline character
+        scanner.nextLine();
 
-    scanner.nextLine ();
-
-    clearConsole();
+        clearConsole();
 
 //        reset color 
-    System.out.print (
-
-"\u001B[0m");
+        System.out.print("\u001B[0m");
     }
 }

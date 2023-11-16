@@ -1,6 +1,3 @@
-iPhone 13		1
-Apple Watch 7		1
-Galaxy Tab S7		1
-MacBook Air		1
-Galaxy S21		1
-Galaxy Watch 4		1
+iPhone 13		3
+MacBook Air		3
+AirPods Pro		3
